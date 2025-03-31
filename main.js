@@ -1,47 +1,102 @@
 class Account {
     constructor(accountName, balance) {
-        if(typeof accountName !== "strign"){ throw new Error("should be a strign data type");}
-        if(typeof balance !=="number"){
-            throw new Error("balance should number");
+        if (typeof accountName !== "string") {
+            throw new Error("Account name must be a string.");
         }
-        this.accountName = accountName;  
+        if (typeof balance !== "number" || isNaN(balance)) {
+            throw new Error("Balance must be a valid number.");
+        }
+        this.accountName = accountName;
         this.balance = balance;
     }
 
     getBalance() {
+        console.log(`Current Balance: $${this.balance}`);
         return this.balance;
     }
 
     deposit(amount) {
-        if (amount > 0) {
-            this.balance += amount;
+        if (typeof amount !== "number" || isNaN(amount) || amount <= 0) {
+            console.log("Invalid deposit amount.");
+            return;
         }
-        return this.balance; // returns as it is 
+        this.balance += amount;
+        console.log(`Deposited: $${amount}. New Balance: $${this.balance}`);
     }
 
-    withdrawal(amount) {
-        if (amount > 0 && this.balance >= amount) { 
-            this.balance -= amount;
+    withdraw(amount) {
+        if (typeof amount !== "number" || isNaN(amount) || amount <= 0) {
+            console.log("Invalid withdrawal amount.");
+            return;
         }
-        return this.balance;  // i could use else here 
+        if (amount > this.balance) {
+            console.log("Insufficient funds.");
+            return;
+        }
+        this.balance -= amount;
+        console.log(`Withdrawn: $${amount}. New Balance: $${this.balance}`);
     }
 
     getAccountName() {
+        console.log(`Account Name: ${this.accountName}`);
         return this.accountName;
     }
 
     accountError() {
-        if (!this.accountName || this.balance < 0) { 
-            return "message error";
+        if (!this.accountName) {
+            return "Error: Account name is missing.";
         }
-        return "No error"; 
+        if (this.balance < 0) {
+            return "Error: Negative balance detected.";
+        }
+        return "No errors.";
+    }
+
+    exitAccount() {
+        console.log("Exiting account... Thank you for using our service!");
+        return;
+    }
+
+    atm() {
+        let exitFlag = false;
+        while (!exitFlag) {
+            let choice = parseInt(prompt(
+                "Select an option:\n1. View Balance\n2. Deposit\n3. Withdraw\n4. View Account Name\n5. Check for Errors\n6. Exit"
+            ));
+
+            switch (choice) {
+                case 1:
+                    this.getBalance();
+                    break;
+                case 2:
+                    let depositAmount = parseFloat(prompt("Enter deposit amount:"));
+                    this.deposit(depositAmount);
+                    break;
+                case 3:
+                    let withdrawAmount = parseFloat(prompt("Enter withdrawal amount:"));
+                    this.withdraw(withdrawAmount);
+                    break;
+                case 4:
+                    this.getAccountName();
+                    break;
+                case 5:
+                    console.log(this.accountError());
+                    break;
+                case 6:
+                    this.exitAccount();
+                    exitFlag = true;
+                    break;
+                default:
+                    console.log("Invalid choice, please try again.");
+            }
+        }
     }
 }
 
 // Test cases
 let myAccount = new Account("John Doe", 1000);
-console.log(myAccount.deposit(500));      // 1500
-console.log(myAccount.withdrawal(200));   // 1300
-console.log(myAccount.withdrawal(-50));   // 1300 (no change)
-console.log(myAccount.getBalance());      // 1300
-console.log(myAccount.accountError());    // No error
+myAccount.deposit(500);
+myAccount.withdraw(200);
+myAccount.withdraw(-50);
+myAccount.getBalance();
+console.log(myAccount.accountError());
