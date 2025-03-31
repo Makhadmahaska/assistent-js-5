@@ -1,5 +1,9 @@
 class Account {
     constructor(accountName, balance) {
+        if(typeof accountName !== "strign"){ throw new Error("should be a strign data type");}
+        if(typeof balance !=="number"){
+            throw new Error("balance should number");
+        }
         this.accountName = accountName;  
         this.balance = balance;
     }
