@@ -93,7 +93,6 @@ class Account {
     }
 }
 
-// Test cases
 let myAccount = new Account("John Doe", 1000);
 myAccount.deposit(500);
 myAccount.withdraw(200);
